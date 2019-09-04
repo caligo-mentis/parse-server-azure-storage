@@ -70,20 +70,29 @@ export class AzureStorageAdapter {
   }
 
   /**
-   * Search for and return a file if found by filename
-   * @param  {object} config
-   * @param  {string} filename
-   * @return {Promise} Promise that succeeds with the result from Azure Storage
+   * Return file properties
+   * @param {String} filename
+   * @return {Promise}
    */
-  getFileData(filename) {
+  getFileProperties(filename) {
     return new Promise((resolve, reject) => {
-      this._client.getBlobToText(this._container, filename, (err, text, blob, res) => {
-        if (err) {
-          return reject(err);
-        }
-
-        resolve(new Buffer(text));
+      this._client.getBlobProperties(this._container, filename, (err, properties) => {
+        if (err) reject(err);
+        else resolve(Object.assign({ length: properties.contentLength }, properties));
       });
+    });
+  }
+
+  getFileStream(filename, options) {
+    const { start, end } = options || {};
+
+    return new Promise(resolve => {
+      const stream = this._client.createReadStream(this._container, filename, {
+        rangeStart: start,
+        rangeEnd: end
+      });
+
+      resolve(stream);
     });
   }
 
