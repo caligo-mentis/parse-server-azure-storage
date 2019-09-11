@@ -5,7 +5,7 @@
 import * as Azure from 'azure-storage';
 import requiredParameter from './RequiredParameter';
 
-import PassThrough from 'stream';
+import { PassThrough } from 'stream';
 
 export class AzureStorageAdapter {
   // Creates an Azure Storage Client.
@@ -43,8 +43,6 @@ export class AzureStorageAdapter {
         }
 
         const stream = new PassThrough();
-
-        console.log('STREAM', stream.pause);
 
         this._client.createBlockBlobFromStream(this._container, filename, stream, data.legnth, (err, result) => {
           if (err) {
