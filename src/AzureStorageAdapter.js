@@ -44,7 +44,9 @@ export class AzureStorageAdapter {
 
         const stream = new PassThrough();
 
-        this._client.createBlockBlobFromStream(this._container, filename, stream, data.length, (err, result) => {
+        console.log('STREAM', stream.pause);
+
+        this._client.createBlockBlobFromStream(this._container, filename, stream, data.legnth, (err, result) => {
           if (err) {
             return reject(err);
           }
